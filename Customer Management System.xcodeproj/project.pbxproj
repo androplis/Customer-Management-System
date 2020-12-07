@@ -25,6 +25,9 @@
 /* Begin PBXFileReference section */
 		0456C91C257EE7E60025C5E8 /* Customer Management System */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Customer Management System"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0456C91F257EE7E60025C5E8 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		0456C927257EEE940025C5E8 /* Customer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Customer.h; sourceTree = "<group>"; };
+		0456C928257EEED40025C5E8 /* Service.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Service.h; sourceTree = "<group>"; };
+		0456C929257EEEF70025C5E8 /* Payment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Payment.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,9 @@
 			isa = PBXGroup;
 			children = (
 				0456C91F257EE7E60025C5E8 /* main.cpp */,
+				0456C927257EEE940025C5E8 /* Customer.h */,
+				0456C928257EEED40025C5E8 /* Service.h */,
+				0456C929257EEEF70025C5E8 /* Payment.h */,
 			);
 			path = "Customer Management System";
 			sourceTree = "<group>";

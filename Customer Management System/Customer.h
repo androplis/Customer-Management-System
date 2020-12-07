@@ -6,8 +6,8 @@
 #include <string>
 using namespace std;
 
-int main() {
-    
-    cout << endl << endl;
-    return 0;
-}
+#ifndef Customer_h
+#define Customer_h
+
+
+#endif /* Customer_h */

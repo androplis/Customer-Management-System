@@ -6,8 +6,8 @@
 #include <string>
 using namespace std;
 
-int main() {
-    
-    cout << endl << endl;
-    return 0;
-}
+#ifndef Service_h
+#define Service_h
+
+
+#endif /* Service_h */
