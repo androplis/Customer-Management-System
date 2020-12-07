@@ -31,23 +31,32 @@ public:
     // Accessors
     int getPaymentNum()
     { return paymentNum; }
+    
     string getCustomerName()
     { return customerName; }
+    
     double getAmount()
     { return amount; }
+    
     string getPaymentType()
     { return paymentType; }
+    
     string getDate()
     { return date; }
     
     // Mutators
-    // Note - no mutator for payment num (unique value)
+    void setPaymentNum(int num)
+    { paymentNum = num; }
+    
     void setCustomerName(string name)
     { customerName = name; }
+    
     void setPaymentType(string type)
     { paymentType = type; }
+    
     void setAmount(double newAmount)
     { amount = newAmount; }
+    
     void setDate(string newDate)
     { date = newDate; }
     
