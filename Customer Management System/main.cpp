@@ -15,6 +15,7 @@ using namespace std;
 // =========== Function Prototypes ============
 int findService(string, vector<Service>);
 int findCustomer(string, vector<Customer>);
+void openFiles(vector<Service>, vector<Customer>);
 
 int main() {
     int dashboardSelection, com_dashboardSelection, cust_dashboardSelection, index;
@@ -29,36 +30,7 @@ int main() {
     vector<Customer> customers;
     vector<Service> services;
     
-    // Open files
-    fstream customerFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/customers.dat", ios::in | ios::out | ios::binary);
-    if(customerFile.fail()) {
-        cout << endl << "File could not be opened";
-    }   else {
-        // Read in customer file
-        while(!customerFile.eof()) {
-            Customer customer;
-            customerFile.read(reinterpret_cast<char *>(&customer), sizeof(customer));
-            if(customer.getCustomerNum() != 0) {
-                customers.push_back(customer);
-            }
-
-        }
-    }
-
-    fstream serviceFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/services.dat", ios::in | ios::out | ios::binary);
-
-    if (serviceFile.fail()) {
-        cout << endl << "File could not be opened.";
-    }   else {
-        // Raad in service file
-        while(!serviceFile.eof()) {
-            Service service;
-            serviceFile.read(reinterpret_cast<char *>(&service), sizeof(service));
-            if(service.getServiceNum() != 0) {
-               services.push_back(service);
-            }
-        }
-    }
+    openFiles(services, customers);
     
     cout << fixed << setprecision(2);
     // ====== WELCOME =======
@@ -188,9 +160,6 @@ int main() {
         }
     }  while (dashboardSelection != 3); // Break main program
 
-    serviceFile.close();
-    customerFile.close();
-
     cout << endl << "Thank you. Come again.";
     cout << endl << endl;
     return 0;
@@ -203,4 +172,39 @@ int findService(string serviceName, vector<Service> services) {
         }
     }
     return -1;
+}
+
+void openFiles(vector<Service> services, vector<Customer> customers) {
+    // Open files
+    fstream customerFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/customers.dat", ios::in | ios::binary);
+    if(customerFile.fail()) {
+        cout << endl << "File could not be opened";
+    }   else {
+        // Read in customer file
+        while(!customerFile.eof()) {
+            Customer customer;
+            customerFile.read(reinterpret_cast<char *>(&customer), sizeof(customer));
+            if(customer.getCustomerNum() != 0) {
+                customers.push_back(customer);
+            }
+
+        }
+    }
+
+    fstream serviceFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/services.dat", ios::in | ios::binary);
+
+    if (serviceFile.fail()) {
+        cout << endl << "File could not be opened.";
+    }   else {
+        // Raad in service file
+        while(!serviceFile.eof()) {
+            Service service;
+            serviceFile.read(reinterpret_cast<char *>(&service), sizeof(service));
+            if(service.getServiceNum() != 0) {
+               services.push_back(service);
+            }
+        }
+    }
+    serviceFile.close();
+    customerFile.close();
 }
