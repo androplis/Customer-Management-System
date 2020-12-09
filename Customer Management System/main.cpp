@@ -12,8 +12,12 @@
 #include "Payment.h"
 using namespace std;
 
+// =========== Function Prototypes ============
+int findService(string, vector<Service>);
+int findCustomer(string, vector<Customer>);
+
 int main() {
-    int dashboardSelection, com_dashboardSelection, cust_dashboardSelection;
+    int dashboardSelection, com_dashboardSelection, cust_dashboardSelection, index;
     // Placeholder variables
     Customer customerDemo;
     
@@ -26,28 +30,34 @@ int main() {
     vector<Service> services;
     
     // Open files
-    fstream customerFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/customers.txt", ios::in | ios::out | ios::binary);
+    fstream customerFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/customers.dat", ios::in | ios::out | ios::binary);
     if(customerFile.fail()) {
         cout << endl << "File could not be opened";
+    }   else {
+        // Read in customer file
+        while(!customerFile.eof()) {
+            Customer customer;
+            customerFile.read(reinterpret_cast<char *>(&customer), sizeof(customer));
+            if(customer.getCustomerNum() != 0) {
+                customers.push_back(customer);
+            }
+
+        }
     }
 
-    fstream serviceFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/services.txt", ios::in | ios::out | ios::binary);
+    fstream serviceFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/services.dat", ios::in | ios::out | ios::binary);
 
     if (serviceFile.fail()) {
         cout << endl << "File could not be opened.";
-    }
-
-    // Read in customer file
-    while(!customerFile.eof()) {
-        Customer customer;
-        customerFile.read(reinterpret_cast<char *>(&customer), sizeof(customer));
-        customers.push_back(customer);
-    }
-    // Raad in service file
-    while(!serviceFile.eof()) {
-        Service service;
-        serviceFile.read(reinterpret_cast<char *>(&service), sizeof(service));
-        services.push_back(service);
+    }   else {
+        // Raad in service file
+        while(!serviceFile.eof()) {
+            Service service;
+            serviceFile.read(reinterpret_cast<char *>(&service), sizeof(service));
+            if(service.getServiceNum() != 0) {
+               services.push_back(service);
+            }
+        }
     }
     
     cout << fixed << setprecision(2);
@@ -87,7 +97,7 @@ int main() {
         if(dashboardSelection == 1) { // Company Dashboard
             do {
                 com_dashboardSelection = -1;
-                cout << endl << "=============== COMPANY DASHBOARD ==================";
+                cout << endl << endl << "=============== COMPANY DASHBOARD ==================";
                 cout << endl << "1. View All Services\n2. Add a Service\n3. Remove a Service\n4. View Total Income\n5. View Income by Specific Month\n6. Back";
                 while(com_dashboardSelection < 1 || com_dashboardSelection > 6) {
                     cout << endl << "Enter Selection: ";
@@ -102,6 +112,7 @@ int main() {
                     case 1: // View All Services
                         for(int i = 0; i < services.size(); i++) {
                             services.at(i).displayService();
+                            cout << endl;
                         }
                         break;
                     case 2: // Add a Service
@@ -110,15 +121,26 @@ int main() {
                         cout << endl << "Enter Service Name: ";
                         cin.ignore();
                         getline(cin, serviceName);
-                        cout << endl << "Enter Service Category";
+                        cout << endl << "Enter Service Category: ";
                         getline(cin, category);
                         cout << endl << "Enter Service Price: ";
                         cin >> price;
                         
                         serviceDemo.setValues(serviceNum, serviceName, category, price);
-                        services.push_back(serviceDemo);
+                        services.push_back(serviceDemo); // Add
                         break;
                     case 3: // Remove a Service
+                        cout << endl << "Enter the Service Name: ";
+                        cin.ignore();
+                        getline(cin, serviceName);
+                        index = findService(serviceName, services);
+                        
+                        if(index != -1) {
+                            services.erase(services.begin() + index);
+                        }   else {
+                            cout << endl << "Could not find the service: " << serviceName;
+                        }
+                            
                         break;
                     case 4: // View Total Income
                         break;
@@ -127,11 +149,13 @@ int main() {
                 }
             } while (com_dashboardSelection != 6); // Break company dashboard
         }
+        
+        
         else if(dashboardSelection == 2) { // Customer Dashboard
             do {
                 cust_dashboardSelection = -1;
                 
-                cout << endl << "=============== CUSTOMER DASHBOARD ==================";
+                cout << endl << endl << "=============== CUSTOMER DASHBOARD ==================";
                 cout << endl << "1. View All Customers\n2. Add a Customer\n3. Remove a Customer\n4. Find a Customer\n5. Update Customer\n6. Record Payment\n7. Record Service\n8. Back";
                 
                 while(cust_dashboardSelection < 1 || cust_dashboardSelection > 8) {
@@ -163,9 +187,20 @@ int main() {
             } while(cust_dashboardSelection != 8); // Break customer dashboard
         }
     }  while (dashboardSelection != 3); // Break main program
-    
-    
-    
+
+    serviceFile.close();
+    customerFile.close();
+
+    cout << endl << "Thank you. Come again.";
     cout << endl << endl;
     return 0;
+}
+
+int findService(string serviceName, vector<Service> services) {
+    for(int i = 0; i < services.size(); i++) {
+        if(services.at(i).getServiceName() == serviceName) {
+            return i;
+        }
+    }
+    return -1;
 }
