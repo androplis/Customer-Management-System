@@ -22,6 +22,11 @@ int main() {
     int dashboardSelection, com_dashboardSelection, cust_dashboardSelection, index;
     // Placeholder variables
     Customer customerDemo;
+    int customerNum;
+    string customerName, address, city, state, zip, email, phone;
+    double balance;
+    vector<Payment> paymentHistory;
+    vector<Service> serviceHistory;
     
     Service serviceDemo;
     int serviceNum;
@@ -142,8 +147,32 @@ int main() {
                 
                 switch(cust_dashboardSelection) {
                     case 1: // View All Customers
+                        for(int i = 0; i < customers.size(); i++) {
+                            customers.at(i).displayCustomerInfo();
+                        }
                         break;
                     case 2: // Add a Customer
+                        
+                        cout << "Enter Customer Number: ";
+                        cin >> customerNum;
+                        cout << "Enter Full Name: ";
+                        cin.ignore();
+                        getline(cin, customerName);
+                        cout << "Enter Address: ";
+                        getline(cin, address);
+                        cout << "Enter City: ";
+                        getline(cin, city);
+                        cout << "Enter State: ";
+                        getline(cin, state);
+                        cout << "Enter ZIP: ";
+                        getline(cin, zip);
+                        cout << "Enter Email: ";
+                        getline(cin, email);
+                        cout << "Enter Phone: ";
+                        getline(cin, phone);
+                        
+                        customerDemo.setValues(customerNum, customerName, address, city, state, zip, email, phone, 0.0);
+                        customers.push_back(customerDemo);
                         break;
                     case 3: // Remove a Customer
                         break;
@@ -177,6 +206,7 @@ int findService(string serviceName, vector<Service> services) {
     return -1;
 }
 
+// === Opens files and stores contents in vectors
 void openFiles(vector<Service> & services, vector<Customer> & customers) {
     // Open files
     fstream customerFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/customers.dat", ios::in | ios::binary);
@@ -212,6 +242,7 @@ void openFiles(vector<Service> & services, vector<Customer> & customers) {
     customerFile.close();
 }
 
+// Svaes contents of vectors into files
 void saveFiles(vector<Service> services, vector<Customer> customers) {
     fstream serviceFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/services.dat", ios::out | ios::trunc | ios::binary);
     
@@ -219,4 +250,11 @@ void saveFiles(vector<Service> services, vector<Customer> customers) {
         serviceFile.write(reinterpret_cast<char *>(&services.at(i)), sizeof(services.at(i)));
     }
     serviceFile.close();
+    
+    fstream customerFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/customers.dat", ios::out | ios::trunc | ios::binary);
+    
+    for(int i = 0; i < customers.size(); i++) {
+        customerFile.write(reinterpret_cast<char *>(&customers.at(i)), sizeof(customers.at(i)));
+    }
+    customerFile.close();
 }
