@@ -15,7 +15,8 @@ using namespace std;
 // =========== Function Prototypes ============
 int findService(string, vector<Service>);
 int findCustomer(string, vector<Customer>);
-void openFiles(vector<Service>, vector<Customer>);
+void openFiles(vector<Service> &, vector<Customer> &);
+void saveFiles(vector<Service>, vector<Customer>);
 
 int main() {
     int dashboardSelection, com_dashboardSelection, cust_dashboardSelection, index;
@@ -159,6 +160,8 @@ int main() {
             } while(cust_dashboardSelection != 8); // Break customer dashboard
         }
     }  while (dashboardSelection != 3); // Break main program
+    
+    saveFiles(services, customers);
 
     cout << endl << "Thank you. Come again.";
     cout << endl << endl;
@@ -174,7 +177,7 @@ int findService(string serviceName, vector<Service> services) {
     return -1;
 }
 
-void openFiles(vector<Service> services, vector<Customer> customers) {
+void openFiles(vector<Service> & services, vector<Customer> & customers) {
     // Open files
     fstream customerFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/customers.dat", ios::in | ios::binary);
     if(customerFile.fail()) {
@@ -201,10 +204,19 @@ void openFiles(vector<Service> services, vector<Customer> customers) {
             Service service;
             serviceFile.read(reinterpret_cast<char *>(&service), sizeof(service));
             if(service.getServiceNum() != 0) {
-               services.push_back(service);
+                services.push_back(service);
             }
         }
     }
     serviceFile.close();
     customerFile.close();
+}
+
+void saveFiles(vector<Service> services, vector<Customer> customers) {
+    fstream serviceFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/services.dat", ios::out | ios::trunc | ios::binary);
+    
+    for(int i = 0; i < services.size(); i++) {
+        serviceFile.write(reinterpret_cast<char *>(&services.at(i)), sizeof(services.at(i)));
+    }
+    serviceFile.close();
 }
