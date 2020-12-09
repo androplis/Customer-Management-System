@@ -24,6 +24,11 @@ int main() {
     // Placeholders
     string newCustomerName, newAddress, newCity, newState, newZip, newEmail, newPhone;
     double newBalance;
+    // Payment var
+    Payment paymentDemo;
+    double paymentAmount;
+    string paymentDate, paymentType;
+    int paymentNum;
     // Customer variables
     Customer customerDemo;
     int customerNum;
@@ -274,6 +279,26 @@ int main() {
                         } // END of IF STATEMENT
                         break;
                     case 6: // Record a Pyament
+                        cout << endl << "Enter customer name: ";
+                        cin.ignore();
+                        getline(cin, customerName);
+                        
+                        index = findCustomer(customerName, customers);
+                        if(index != -1) {
+                            cout << endl << "Enter payment number: ";
+                            cin >> paymentNum;
+                            cout << endl << "Enter payment amount ($): ";
+                            cin >> paymentAmount;
+                            cout << endl << "Enter payment type (Check, Cash, PayPal, E-transfer, Other): ";
+                            cin.ignore();
+                            getline(cin, paymentType);
+                            cout << endl << "Enter payment date: ";
+                            getline(cin, paymentDate);
+                            customerName = customers.at(index).getFullName();
+                            
+                            paymentDemo.setValues(paymentNum, customerName, paymentAmount, paymentType, paymentDate); // Create Payment object
+                            customers.at(index).makePayment(paymentDemo); // make payment 
+                        }
                         break;
                     case 7: // Record a Service
                         break;
