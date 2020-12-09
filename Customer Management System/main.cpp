@@ -19,8 +19,12 @@ void openFiles(vector<Service> &, vector<Customer> &);
 void saveFiles(vector<Service>, vector<Customer>);
 
 int main() {
-    int dashboardSelection, com_dashboardSelection, cust_dashboardSelection, index;
-    // Placeholder variables
+    // Slection options
+    int dashboardSelection, com_dashboardSelection, cust_dashboardSelection, selection, index;
+    // Placeholders
+    string newCustomerName, newAddress, newCity, newState, newZip, newEmail, newPhone;
+    double newBalance;
+    // Customer variables
     Customer customerDemo;
     int customerNum;
     string customerName, address, city, state, zip, email, phone;
@@ -149,6 +153,7 @@ int main() {
                     case 1: // View All Customers
                         for(int i = 0; i < customers.size(); i++) {
                             customers.at(i).displayCustomerInfo();
+                            cout << endl;
                         }
                         break;
                     case 2: // Add a Customer
@@ -175,15 +180,102 @@ int main() {
                         customers.push_back(customerDemo);
                         break;
                     case 3: // Remove a Customer
+                        cout << endl << "Enter Customer Name: ";
+                        cin.ignore();
+                        getline(cin, customerName);
+                        
+                        index = findCustomer(customerName, customers);
+                        if(index != -1) {
+                            customers.erase(customers.begin() + index);
+                        }   else {
+                            cout << endl << "Customer does not exist";
+                        }
                         break;
                     case 4: // Find a Customer
+                        cout << endl << "Enter Customer Name: ";
+                        cin.ignore();
+                        getline(cin, customerName);
+                        
+                        index = findCustomer(customerName, customers);
+                        if(index != -1) {
+                            customers.at(index).displayCustomerInfo();
+                        }   else {
+                            cout << endl << "Customer does not exist";
+                        }
                         break;
-                    case 5: // Updatae a Customer
+                    case 5: // Update a Customer
+                        cout << endl << "Enter Customer Name: ";
+                        cin.ignore();
+                        getline(cin, customerName);
+                        
+                        index = findCustomer(customerName, customers);
+                        if(index != -1) {
+                            do { // Validate selection
+                                cout << endl << "What would you like to update?";
+                                cout << endl << "{1. Customer Name, 2. Address, 3. City, 4. State, 5. ZIP, 6. Email, 7. Phone, 8. Balance}";
+                                cout << endl << "Enter Selection: ";
+                                cin >> selection;
+                                if (selection < 1 || selection > 8) {
+                                    cout << endl << "ERROR: Please enter a valid optione.";
+                                }
+                            }   while (selection < 1 || selection > 8);
+                            
+                            switch(selection) {
+                                case 1: // Name
+                                    cout << endl << "Enter new full name: ";
+                                    cin.ignore();
+                                    getline(cin, newCustomerName);
+                                    customers.at(index).setFullName(newCustomerName);
+                                    break;
+                                case 2: // Address
+                                    cout << endl << "Enter new address: ";
+                                    cin.ignore();
+                                    getline(cin, newAddress);
+                                    customers.at(index).setAddress(newAddress);
+                                    break;
+                                case 3: // City
+                                    cout << endl << "Enter new city: ";
+                                    cin.ignore();
+                                    getline(cin, newCity);
+                                    customers.at(index).setCity(newCity);
+                                    break;
+                                case 4: // State
+                                    cout << endl << "Enter new state: ";
+                                    cin.ignore();
+                                    getline(cin, newState);
+                                    customers.at(index).setState(newState);
+                                    break;
+                                case 5: // Zip
+                                    cout << endl << "Enter new ZIP code: ";
+                                    cin.ignore();
+                                    getline(cin, newZip);
+                                    customers.at(index).setZip(newZip);
+                                    break;
+                                case 6: // Email
+                                    cout << endl << "Enter new email address: ";
+                                    cin.ignore();
+                                    getline(cin, newEmail);
+                                    customers.at(index).setEmail(newEmail);
+                                    break;
+                                case 7: // Phone
+                                    cout << endl << "Enter new phone number: ";
+                                    cin.ignore();
+                                    getline(cin, newPhone);
+                                    customers.at(index).setPhone(newPhone);
+                                    break;
+                                case 8: // Balance
+                                    cout << endl << "Enter new balance: ";
+                                    cin >> newBalance;
+                                    customers.at(index).setBalance(newBalance);
+                                    break;
+                            } // END of SWITCH STATEMENT
+                        }   else {
+                                cout << endl << "That customer does not exitst";
+                        } // END of IF STATEMENT
                         break;
                     case 6: // Record a Pyament
                         break;
                     case 7: // Record a Service
-                        break;
                         break;
                 }
             } while(cust_dashboardSelection != 8); // Break customer dashboard
@@ -200,6 +292,15 @@ int main() {
 int findService(string serviceName, vector<Service> services) {
     for(int i = 0; i < services.size(); i++) {
         if(services.at(i).getServiceName() == serviceName) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int findCustomer(string customerName, vector<Customer> customers) {
+    for(int i = 0; i < customers.size(); i++) {
+        if(customers.at(i).getFullName() == customerName) {
             return i;
         }
     }
