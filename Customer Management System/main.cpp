@@ -14,27 +14,43 @@ using namespace std;
 
 int main() {
     int dashboardSelection, com_dashboardSelection, cust_dashboardSelection;
+    // Placeholder variables
+    Customer customerDemo;
+    
+    Service serviceDemo;
+    int serviceNum;
+    string category, serviceName;
+    double price;
+    
     vector<Customer> customers;
     vector<Service> services;
     
     // Open files
-    try {
-        fstream customerFile("Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/customers.txt", ios::in | ios::out | ios::binary);
-    }
-    catch(exception ex) {
+    fstream customerFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/customers.txt", ios::in | ios::out | ios::binary);
+    if(customerFile.fail()) {
         cout << endl << "File could not be opened";
     }
-    
-    try {
-        fstream serviceFile("Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/services.txt", ios::in | ios::out | ios::binary);
-    }
-    catch(exception ex) {
+
+    fstream serviceFile("/Users/andrewbiddle/Sinclair/Fall 2020/C++/Final_Project/services.txt", ios::in | ios::out | ios::binary);
+
+    if (serviceFile.fail()) {
         cout << endl << "File could not be opened.";
     }
+
+    // Read in customer file
+    while(!customerFile.eof()) {
+        Customer customer;
+        customerFile.read(reinterpret_cast<char *>(&customer), sizeof(customer));
+        customers.push_back(customer);
+    }
+    // Raad in service file
+    while(!serviceFile.eof()) {
+        Service service;
+        serviceFile.read(reinterpret_cast<char *>(&service), sizeof(service));
+        services.push_back(service);
+    }
     
-    // Load customers and service vectors
-    
-    
+    cout << fixed << setprecision(2);
     // ====== WELCOME =======
     cout << endl << " ==============================================================================================";
     cout << endl << " ==============================================================================================" << endl;
@@ -84,8 +100,23 @@ int main() {
                 
                 switch(com_dashboardSelection) {
                     case 1: // View All Services
+                        for(int i = 0; i < services.size(); i++) {
+                            services.at(i).displayService();
+                        }
                         break;
                     case 2: // Add a Service
+                        cout << endl << "Enter Service Num: ";
+                        cin >> serviceNum;
+                        cout << endl << "Enter Service Name: ";
+                        cin.ignore();
+                        getline(cin, serviceName);
+                        cout << endl << "Enter Service Category";
+                        getline(cin, category);
+                        cout << endl << "Enter Service Price: ";
+                        cin >> price;
+                        
+                        serviceDemo.setValues(serviceNum, serviceName, category, price);
+                        services.push_back(serviceDemo);
                         break;
                     case 3: // Remove a Service
                         break;
@@ -132,6 +163,8 @@ int main() {
             } while(cust_dashboardSelection != 8); // Break customer dashboard
         }
     }  while (dashboardSelection != 3); // Break main program
+    
+    
     
     cout << endl << endl;
     return 0;
