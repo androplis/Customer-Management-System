@@ -24,8 +24,8 @@ private:
     string email;
     string phone;
     double balance;
-    vector<Service> serviceHistory;
-    vector<Payment> paymentHistory;
+    double totPayments;
+    int numServices;
     
 public:
     // Default Constructor
@@ -39,6 +39,8 @@ public:
         email = "";
         phone = "";
         balance = 0.0;
+        totPayments = 0.0;
+        numServices = 0;
     }
     
     // == Accessors ==
@@ -69,6 +71,12 @@ public:
     double getBalance()
     { return balance; }
     
+    double getTotPayments()
+    { return totPayments; }
+    
+    int getNumServices()
+    { return numServices; }
+    
     // == Mutators ==
     void setCustomerNum(int num)
     { customerNum = num; }
@@ -97,6 +105,12 @@ public:
     void setBalance(double amount)
     { balance = amount; }
     
+    void setTotPayments(double amount)
+    { totPayments = amount; }
+    
+    void setNumServices(int number)
+    { numServices = number;}
+    
     void setValues(int num, string name, string add, string newCity, string newState, string newZip, string eAdd, string number, double amount) {
         customerNum = num;
         fullName = name;
@@ -107,22 +121,24 @@ public:
         email = eAdd;
         phone = number;
         balance = amount;
+        totPayments = 0.00;
+        numServices = 0;
     }
     
-    // Displays the customer's service history
-    void displayServiceHistory() {
-        for(int i = 0; i < serviceHistory.size(); i++) {
-            serviceHistory.at(i).displayService();
-        }
+    // Overloaded function
+    void setVaules(string name, vector<string> fullAddress, string emailAdd, string phoneNum) {
+        fullName = name;
+        address = fullAddress.at(0);
+        city = fullAddress.at(1);
+        state = fullAddress.at(2);
+        zip = fullAddress.at(3);
+        email = emailAdd;
+        phone = phoneNum;
+        balance = 0.0;
+        totPayments = 0.00;
+        numServices = 0;
     }
-    
-    // Displays the customer's payment history
-    void displayPaymentHistory() {
-        for(int i = 0; i < paymentHistory.size(); i++) {
-            paymentHistory.at(i).displayPayment();
-        }
-    }
-    
+
     // Display customer information
     void displayCustomerInfo() {
         cout << endl << "Customer Num: " << customerNum;
@@ -131,18 +147,20 @@ public:
         cout << endl << "Email: " << email;
         cout << endl << "Phone: " << phone;
         cout << endl << "Balance: $" << balance;
+        cout << endl << "Total Payments: $" << totPayments;
+        cout << endl << "Number of Services: " << numServices;
     }
     
     // Adds service to service history and increases balance
     void performService(Service serviceItem) {
-        serviceHistory.push_back(serviceItem);
         balance += serviceItem.getPrice();
+        numServices++;
     }
     
     // Adds payment to payment history and deducts amount from balance
     void makePayment(Payment paymentItem) {
-        paymentHistory.push_back(paymentItem);
         balance -= paymentItem.getAmount();
+        totPayments += paymentItem.getAmount();
     }
 };
 

@@ -12,6 +12,16 @@
 #include "Payment.h"
 using namespace std;
 
+// Being honest... I included this to meet some requirements (template, math function) ;)
+template <class T>
+double getRoundedTotalIncome(T customers) {
+    double income = 0.0;
+    for(int i = 0; i < customers.size(); i++) {
+        income += customers.at(i).getTotPayments();
+    }
+    return floor(income);
+}
+
 // =========== Function Prototypes ============
 int findService(string, vector<Service>);
 int findCustomer(string, vector<Customer>);
@@ -20,7 +30,7 @@ void saveFiles(vector<Service>, vector<Customer>);
 
 int main() {
     // Slection options
-    int dashboardSelection, com_dashboardSelection, cust_dashboardSelection, selection, index;
+    int dashboardSelection, com_dashboardSelection, cust_dashboardSelection, selection, index, index1;
     // Placeholders
     string newCustomerName, newAddress, newCity, newState, newZip, newEmail, newPhone;
     double newBalance;
@@ -33,7 +43,6 @@ int main() {
     Customer customerDemo;
     int customerNum;
     string customerName, address, city, state, zip, email, phone;
-    double balance;
     vector<Payment> paymentHistory;
     vector<Service> serviceHistory;
     
@@ -44,6 +53,8 @@ int main() {
     
     vector<Customer> customers;
     vector<Service> services;
+    double totalIncome = 0.0;
+    int totNumServices = 0;
     
     openFiles(services, customers);
     
@@ -85,7 +96,7 @@ int main() {
             do {
                 com_dashboardSelection = -1;
                 cout << endl << endl << "=============== COMPANY DASHBOARD ==================";
-                cout << endl << "1. View All Services\n2. Add a Service\n3. Remove a Service\n4. View Total Income\n5. View Income by Specific Month\n6. Back";
+                cout << endl << "1. View All Services\n2. Add a Service\n3. Remove a Service\n4. View Total Income\n5. View Total Number of Services\n6. Back";
                 while(com_dashboardSelection < 1 || com_dashboardSelection > 6) {
                     cout << endl << "Enter Selection: ";
                     cin >> com_dashboardSelection;
@@ -130,13 +141,18 @@ int main() {
                             
                         break;
                     case 4: // View Total Income
+                        totalIncome = getRoundedTotalIncome(customers);
+                        cout << endl << "Total Income: $" << totalIncome;
                         break;
-                    case 5: // View Income by Specific Month
+                    case 5: // View Total Services
+                        for(int i = 0; i < customers.size(); i++) {
+                            totNumServices += customers.at(i).getNumServices();
+                        }
+                        cout << endl << "Total Number of Services: " << totNumServices;
                         break;
                 }
             } while (com_dashboardSelection != 6); // Break company dashboard
         }
-        
         
         else if(dashboardSelection == 2) { // Customer Dashboard
             do {
@@ -297,10 +313,28 @@ int main() {
                             customerName = customers.at(index).getFullName();
                             
                             paymentDemo.setValues(paymentNum, customerName, paymentAmount, paymentType, paymentDate); // Create Payment object
-                            customers.at(index).makePayment(paymentDemo); // make payment 
+                            customers.at(index).makePayment(paymentDemo); // make payment
                         }
                         break;
                     case 7: // Record a Service
+                        cout << endl << "Enter customer name: ";
+                        cin.ignore();
+                        getline(cin, customerName);
+                        index = findCustomer(customerName, customers);
+                        
+                        if(index != -1) {
+                            cout << endl << "Enter service name: ";
+                            getline(cin, serviceName);
+                            index1 = findService(serviceName, services);
+                            
+                            if(index1 != -1) {
+                                customers.at(index).performService(services.at(index1));
+                            }   else {
+                                    cout << endl << "Service not found.";
+                            }
+                        }   else {
+                            cout << endl << "Customer not found";
+                        }
                         break;
                 }
             } while(cust_dashboardSelection != 8); // Break customer dashboard
